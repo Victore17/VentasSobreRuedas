@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import victor.mexico.ventassobreruedas.R
+import victor.mexico.ventassobreruedas.ui.components.CenteredContentPadding
 import victor.mexico.ventassobreruedas.data.repository.SalesDay
 import victor.mexico.ventassobreruedas.salesRepository
 import victor.mexico.ventassobreruedas.ui.theme.MyApplicationTheme
@@ -95,13 +96,15 @@ fun SalesDaysScreen(
                 )
             }
 
-            else -> LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = innerPadding,
-            ) {
-                items(uiState.days, key = { it.date.toEpochDay() }) { day ->
-                    SalesDayItem(day = day, onClick = { onDayClick(day.date) })
-                    HorizontalDivider()
+            else -> CenteredContentPadding(innerPadding) { padding ->
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = padding,
+                ) {
+                    items(uiState.days, key = { it.date.toEpochDay() }) { day ->
+                        SalesDayItem(day = day, onClick = { onDayClick(day.date) })
+                        HorizontalDivider()
+                    }
                 }
             }
         }
@@ -116,7 +119,8 @@ private fun SalesDayItem(day: SalesDay, onClick: () -> Unit) {
         supportingContent = {
             Text(
                 pluralStringResource(R.plurals.sales_day_count, day.count, day.count),
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         },
         trailingContent = {

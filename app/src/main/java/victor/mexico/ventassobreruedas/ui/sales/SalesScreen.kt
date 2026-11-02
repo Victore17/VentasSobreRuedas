@@ -2,7 +2,6 @@ package victor.mexico.ventassobreruedas.ui.sales
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import victor.mexico.ventassobreruedas.R
+import victor.mexico.ventassobreruedas.ui.components.CenteredContentPadding
 import victor.mexico.ventassobreruedas.salesRepository
 import victor.mexico.ventassobreruedas.data.repository.Sale
 import victor.mexico.ventassobreruedas.ui.theme.MyApplicationTheme
@@ -96,7 +96,7 @@ fun SalesScreen(
                         if (!uiState.isToday) {
                             Text(
                                 formatLongDate(uiState.date),
-                                style = MaterialTheme.typography.bodySmall,
+                                style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
@@ -118,59 +118,59 @@ fun SalesScreen(
             }
         },
     ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(
-                top = innerPadding.calculateTopPadding(),
-                bottom = innerPadding.calculateBottomPadding() + 88.dp,
-            ),
-        ) {
-            item {
-                SaleFormCard(
-                    form = form,
-                    onProductNameChange = onProductNameChange,
-                    onPriceChange = onPriceChange,
-                    onAddSale = submit,
-                    productFocus = productFocus,
-                )
-            }
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        stringResource(R.string.sales_count, uiState.sales.size),
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                    Text(
-                        formatCents(uiState.totalCents),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-                }
-                HorizontalDivider()
-            }
-            if (uiState.sales.isEmpty()) {
+        // Lista centrada en tablets; 88dp abajo para que el botón "Finalizar" no tape la última venta.
+        CenteredContentPadding(innerPadding, extraBottom = 88.dp) { padding ->
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = padding,
+            ) {
                 item {
-                    Text(
-                        stringResource(
-                            if (uiState.isToday) R.string.no_sales_yet else R.string.no_sales_for_date,
-                        ),
-                        modifier = Modifier.padding(16.dp),
-                        style = MaterialTheme.typography.bodyMedium,
+                    SaleFormCard(
+                        form = form,
+                        onProductNameChange = onProductNameChange,
+                        onPriceChange = onPriceChange,
+                        onAddSale = submit,
+                        productFocus = productFocus,
                     )
                 }
-            }
-            items(uiState.sales, key = { it.id }) { sale ->
-                SaleItem(
-                    sale = sale,
-                    onDelete = { onDeleteSale(sale.id) },
-                    modifier = Modifier.animateItem(),
-                )
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            stringResource(R.string.sales_count, uiState.sales.size),
+                            style = MaterialTheme.typography.titleMedium,
+                        )
+                        Text(
+                            formatCents(uiState.totalCents),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                    HorizontalDivider()
+                }
+                if (uiState.sales.isEmpty()) {
+                    item {
+                        Text(
+                            stringResource(
+                                if (uiState.isToday) R.string.no_sales_yet else R.string.no_sales_for_date,
+                            ),
+                            modifier = Modifier.padding(16.dp),
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+                }
+                items(uiState.sales, key = { it.id }) { sale ->
+                    SaleItem(
+                        sale = sale,
+                        onDelete = { onDeleteSale(sale.id) },
+                        modifier = Modifier.animateItem(),
+                    )
+                }
             }
         }
     }

@@ -34,7 +34,8 @@ fun SaleItem(
         supportingContent = {
             Text(
                 timeFormatter.format(sale.createdAt.atZone(ZoneId.systemDefault())),
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         },
         trailingContent = {

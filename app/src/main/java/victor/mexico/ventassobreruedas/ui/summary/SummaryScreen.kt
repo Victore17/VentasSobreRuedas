@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import victor.mexico.ventassobreruedas.R
+import victor.mexico.ventassobreruedas.ui.components.CenteredContentPadding
 import victor.mexico.ventassobreruedas.data.repository.Sale
 import victor.mexico.ventassobreruedas.salesRepository
 import victor.mexico.ventassobreruedas.ui.theme.MyApplicationTheme
@@ -140,70 +141,72 @@ fun SummaryScreen(
             )
         },
     ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = innerPadding,
-        ) {
-            item {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    ),
-                ) {
-                    Column(
-                        modifier = Modifier.padding(20.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
+        CenteredContentPadding(innerPadding) { padding ->
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = padding,
+            ) {
+                item {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        ),
                     ) {
-                        Text(stringResource(R.string.date), style = MaterialTheme.typography.labelLarge)
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                formatLongDate(uiState.date),
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.weight(1f),
-                            )
-                            if (!uiState.isToday) {
-                                TextButton(onClick = { onDateSelected(uiState.today) }) {
-                                    Text(stringResource(R.string.today))
+                        Column(
+                            modifier = Modifier.padding(20.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            Text(stringResource(R.string.date), style = MaterialTheme.typography.labelLarge)
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    formatLongDate(uiState.date),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier.weight(1f),
+                                )
+                                if (!uiState.isToday) {
+                                    TextButton(onClick = { onDateSelected(uiState.today) }) {
+                                        Text(stringResource(R.string.today))
+                                    }
                                 }
                             }
+                            Text(
+                                stringResource(R.string.total_sold),
+                                style = MaterialTheme.typography.labelLarge,
+                                modifier = Modifier.padding(top = 12.dp),
+                            )
+                            Text(
+                                formatCents(uiState.totalCents),
+                                style = MaterialTheme.typography.displaySmall,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            Text(
+                                stringResource(R.string.sales_count, uiState.count),
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(top = 12.dp),
+                            )
                         }
+                    }
+                }
+                if (uiState.sales.isEmpty()) {
+                    item {
                         Text(
-                            stringResource(R.string.total_sold),
-                            style = MaterialTheme.typography.labelLarge,
-                            modifier = Modifier.padding(top = 12.dp),
-                        )
-                        Text(
-                            formatCents(uiState.totalCents),
-                            style = MaterialTheme.typography.displaySmall,
-                            fontWeight = FontWeight.Bold,
-                        )
-                        Text(
-                            stringResource(R.string.sales_count, uiState.count),
+                            stringResource(R.string.no_sales_for_date),
+                            modifier = Modifier.padding(horizontal = 16.dp),
                             style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(top = 12.dp),
                         )
                     }
                 }
-            }
-            if (uiState.sales.isEmpty()) {
-                item {
-                    Text(
-                        stringResource(R.string.no_sales_for_date),
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        style = MaterialTheme.typography.bodyMedium,
+                items(uiState.sales, key = { it.id }) { sale ->
+                    SwipeableSaleItem(
+                        sale = sale,
+                        onEdit = { editingSaleId = sale.id },
+                        onDelete = { deletingSaleId = sale.id },
+                        modifier = Modifier.animateItem(),
                     )
                 }
-            }
-            items(uiState.sales, key = { it.id }) { sale ->
-                SwipeableSaleItem(
-                    sale = sale,
-                    onEdit = { editingSaleId = sale.id },
-                    onDelete = { deletingSaleId = sale.id },
-                    modifier = Modifier.animateItem(),
-                )
             }
         }
     }

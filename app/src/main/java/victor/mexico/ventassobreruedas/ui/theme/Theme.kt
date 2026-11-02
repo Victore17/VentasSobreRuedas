@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalConfiguration
 
 private val LightColorScheme = lightColorScheme(
     primary = TurquoisePrimaryLight,
@@ -71,9 +72,11 @@ fun MyApplicationTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
+    // Tablet = el lado más corto de la pantalla mide 600dp o más (también en horizontal).
+    val isTablet = LocalConfiguration.current.smallestScreenWidthDp >= 600
     MaterialTheme(
         colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme,
-        typography = Typography,
+        typography = if (isTablet) TabletTypography else Typography,
         content = content,
     )
 }

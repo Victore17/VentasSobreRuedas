@@ -128,6 +128,6 @@ private fun SwipeAction(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(icon, contentDescription = null, tint = contentColor)
-        Text(label, color = contentColor, style = MaterialTheme.typography.labelMedium)
+        Text(label, color = contentColor, style = MaterialTheme.typography.labelLarge)
     }
 }

@@ -33,3 +33,13 @@ The build requires `app/google-services.json`, which is git-ignored; download it
 
 - Kotlin is 2.3.x because current Firebase/googleid artifacts carry Kotlin 2.4 metadata; Kotlin 2.2 can't read them.
 - Firestore security rules (set in the console) only allow `request.auth.uid == uid` on `users/{uid}/sales/**`.
+
+## Lenguaje
+
+- Todo siempre responde en español.
+
+## Cambios en los archivos.
+
+- Cada que modifiques un archivo .kt, corre la app en el dispositivo conectado. Si no hay ninguno físico conectado, entonces no lo hagas.
+
+- No subas screenshots a github al menos que yo te lo pida explicitamente.
