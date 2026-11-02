@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">Ventas del Día</string>
+    <string name="register_sales_title">Registrar ventas</string>
+    <string name="product">Producto</string>
+    <string name="price">Precio</string>
+    <string name="add_sale">Agregar venta</string>
+    <string name="finish_day">Finalizar</string>
+    <string name="error_product">Ingresa el nombre del producto</string>
+    <string name="error_price">Ingresa un precio válido (ej. 12.50)</string>
+    <string name="no_sales_yet">Aún no hay ventas registradas hoy.</string>
+    <string name="delete_sale">Eliminar venta</string>
+    <string name="sales_count">Productos vendidos: %1$d</string>
+    <string name="summary_title">Detalles</string>
+    <string name="date">Fecha</string>
+    <string name="total_sold">Total vendido</string>
+    <string name="back">Volver</string>
+    <string name="home_title">Home</string>
+    <string name="view_sales">Ver ventas</string>
+    <string name="change_date">Cambiar fecha</string>
+    <string name="today">Hoy</string>
+    <string name="accept">Aceptar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="no_sales_for_date">No hay ventas registradas en esta fecha.</string>
+    <string name="sales_days_title">Ventas</string>
+    <string name="no_sales_days">Aún no hay ventas registradas.</string>
+    <plurals name="sales_day_count">
+        <item quantity="one">%1$d venta</item>
+        <item quantity="other">%1$d ventas</item>
+    </plurals>
+    <string name="edit">Editar</string>
+    <string name="delete">Eliminar</string>
+    <string name="edit_sale">Editar venta</string>
+    <string name="save">Guardar</string>
+    <string name="delete_sale_title">¿Eliminar venta?</string>
+    <string name="delete_sale_message">Se eliminará \"%1$s\". Esta acción no se puede deshacer.</string>
+    <string name="sign_in_google">Iniciar sesión con Google</string>
+    <string name="sign_in_explanation">Tus ventas se guardan en la nube con tu cuenta de Google.</string>
+    <string name="sign_out">Cerrar sesión</string>
+    <string name="error_no_google_account">No hay ninguna cuenta de Google en este teléfono. Agrega una en Ajustes.</string>
+    <string name="error_sign_in">No se pudo iniciar sesión. Revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="welcome">¡Bienvenido!</string>
+    <string name="app_tagline">Registra y consulta tus ventas</string>
+    <string name="sign_in_footer">Tus datos se guardan de forma segura</string>
+    <string name="greeting">Hola, %1$s</string>
+    <string name="greeting_generic">Hola</string>
+</resources>

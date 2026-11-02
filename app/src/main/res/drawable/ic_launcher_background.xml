@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo del ícono: degradado de mar turquesa a azul profundo con dos olas suaves. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path android:pathData="M0,0h108v108h-108z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="0"
+                android:startY="0"
+                android:endX="108"
+                android:endY="108"
+                android:startColor="#FF00C9D2"
+                android:endColor="#FF0077B6" />
+        </aapt:attr>
+    </path>
+    <path
+        android:fillColor="#26FFFFFF"
+        android:pathData="M0,76C18,68 36,84 54,76C72,68 90,84 108,76L108,108L0,108Z" />
+    <path
+        android:fillColor="#1FFFFFFF"
+        android:pathData="M0,86C18,79 36,93 54,86C72,79 90,93 108,86L108,108L0,108Z" />
+</vector>
