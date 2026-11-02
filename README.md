@@ -2,6 +2,14 @@
 
 App Android para registrar las ventas del día y consultarlas después. Las ventas se guardan en la nube (Firebase) con tu cuenta de Google y la app funciona también sin internet: lo registrado sin señal se sincroniza solo al volver la conexión.
 
+## Capturas
+
+| Inicio de sesión | Home | Registrar ventas |
+|:---:|:---:|:---:|
+| <img src="docs/screenshots/login.png" width="240" alt="Pantalla de inicio de sesión"> | <img src="docs/screenshots/home.png" width="240" alt="Pantalla principal"> | <img src="docs/screenshots/registrar.png" width="240" alt="Registrar ventas"> |
+| **Ventas por día** | **Detalles del día** | **Editar y eliminar** |
+| <img src="docs/screenshots/ventas.png" width="240" alt="Lista de días con ventas"> | <img src="docs/screenshots/detalles.png" width="240" alt="Detalles del día"> | <img src="docs/screenshots/deslizar.png" width="240" alt="Venta deslizada mostrando Editar y Eliminar"> |
+
 ## Funciones
 
 - **Inicio de sesión con Google.** Las ventas quedan ligadas a tu cuenta, no al teléfono.
