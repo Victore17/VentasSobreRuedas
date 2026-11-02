@@ -18,6 +18,7 @@ App Android para registrar las ventas del día y consultarlas después. Las vent
 - **Detalles del día:** total vendido y lista de ventas. Al deslizar una venta hacia la izquierda aparecen **Editar** y **Eliminar** (con confirmación).
 - **Sin internet:** se puede registrar, editar y eliminar sin señal.
 - Tema turquesa en modo claro y oscuro.
+- **Idiomas:** español, inglés y ruso. La app usa el idioma configurado en el teléfono (con cualquier otro idioma se muestra en español). Las cantidades siempre se muestran en pesos (`$`).
 
 ## Tecnologías
 

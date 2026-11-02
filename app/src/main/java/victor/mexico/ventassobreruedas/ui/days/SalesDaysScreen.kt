@@ -37,7 +37,7 @@ import victor.mexico.ventassobreruedas.data.repository.SalesDay
 import victor.mexico.ventassobreruedas.salesRepository
 import victor.mexico.ventassobreruedas.ui.theme.MyApplicationTheme
 import victor.mexico.ventassobreruedas.util.formatCents
-import victor.mexico.ventassobreruedas.util.formatLongDate
+import victor.mexico.ventassobreruedas.ui.components.localizedLongDate
 import java.time.LocalDate
 
 @Composable
@@ -115,7 +115,7 @@ fun SalesDaysScreen(
 private fun SalesDayItem(day: SalesDay, onClick: () -> Unit) {
     ListItem(
         modifier = Modifier.clickable(onClick = onClick),
-        headlineContent = { Text(formatLongDate(day.date), fontWeight = FontWeight.SemiBold) },
+        headlineContent = { Text(localizedLongDate(day.date), fontWeight = FontWeight.SemiBold) },
         supportingContent = {
             Text(
                 pluralStringResource(R.plurals.sales_day_count, day.count, day.count),

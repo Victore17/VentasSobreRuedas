@@ -27,4 +27,13 @@ class MoneyTest {
     fun formatsCents() {
         assertEquals("$12.50", formatCents(1250, Locale.US))
     }
+
+    @Test
+    fun alwaysUsesPesoSymbolWhateverTheLanguage() {
+        // Los espacios de agrupación/separación de cada idioma son espacios no separables.
+        fun normalized(s: String) = s.replace('\u00A0', ' ').replace('\u202F', ' ')
+        assertEquals("$1,540.00", formatCents(154000, Locale.UK))
+        assertEquals("1 540,00 $", normalized(formatCents(154000, Locale.forLanguageTag("ru-RU"))))
+        assertEquals("$1,540.00", formatCents(154000, Locale.forLanguageTag("es-MX")))
+    }
 }

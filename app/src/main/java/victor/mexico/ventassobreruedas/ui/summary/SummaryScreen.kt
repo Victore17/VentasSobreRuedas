@@ -42,7 +42,7 @@ import victor.mexico.ventassobreruedas.data.repository.Sale
 import victor.mexico.ventassobreruedas.salesRepository
 import victor.mexico.ventassobreruedas.ui.theme.MyApplicationTheme
 import victor.mexico.ventassobreruedas.util.formatCents
-import victor.mexico.ventassobreruedas.util.formatLongDate
+import victor.mexico.ventassobreruedas.ui.components.localizedLongDate
 import java.time.Instant
 import java.time.LocalDate
 
@@ -162,7 +162,7 @@ fun SummaryScreen(
                             Text(stringResource(R.string.date), style = MaterialTheme.typography.labelLarge)
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Text(
-                                    formatLongDate(uiState.date),
+                                    localizedLongDate(uiState.date),
                                     style = MaterialTheme.typography.titleMedium,
                                     modifier = Modifier.weight(1f),
                                 )

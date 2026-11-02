@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import victor.mexico.ventassobreruedas.R
 import victor.mexico.ventassobreruedas.ui.components.MaxFormWidth
 import victor.mexico.ventassobreruedas.ui.theme.MyApplicationTheme
-import victor.mexico.ventassobreruedas.util.formatLongDate
+import victor.mexico.ventassobreruedas.ui.components.localizedLongDate
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +51,7 @@ fun HomeScreen(
     onSignOut: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val today = remember { formatLongDate(LocalDate.now()) }
+    val today = localizedLongDate(remember { LocalDate.now() })
     Scaffold(
         modifier = modifier,
         topBar = {

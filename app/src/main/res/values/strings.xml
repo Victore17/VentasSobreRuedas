@@ -1,4 +1,5 @@
 <resources>
+    <!-- Español: idioma por omisión (también se usa si el teléfono está en un idioma sin traducción). -->
     <string name="app_name">Ventas del Día</string>
     <string name="register_sales_title">Registrar ventas</string>
     <string name="product">Producto</string>
@@ -44,4 +45,7 @@
     <string name="greeting">Hola, %1$s</string>
     <string name="greeting_generic">Hola</string>
     <string name="add_sales_for_date">Registrar ventas en esta fecha</string>
+    <!-- Formato de fecha larga (DateTimeFormatter) y su idioma; ver localizedLongDate. -->
+    <string name="date_format">EEEE dd \'de\' MMMM \'de\' yyyy</string>
+    <string name="date_locale">es</string>
 </resources>

@@ -45,7 +45,7 @@ import victor.mexico.ventassobreruedas.salesRepository
 import victor.mexico.ventassobreruedas.data.repository.Sale
 import victor.mexico.ventassobreruedas.ui.theme.MyApplicationTheme
 import victor.mexico.ventassobreruedas.util.formatCents
-import victor.mexico.ventassobreruedas.util.formatLongDate
+import victor.mexico.ventassobreruedas.ui.components.localizedLongDate
 import java.time.Instant
 import java.time.LocalDate
 
@@ -95,7 +95,7 @@ fun SalesScreen(
                         Text(stringResource(R.string.register_sales_title))
                         if (!uiState.isToday) {
                             Text(
-                                formatLongDate(uiState.date),
+                                localizedLongDate(uiState.date),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
