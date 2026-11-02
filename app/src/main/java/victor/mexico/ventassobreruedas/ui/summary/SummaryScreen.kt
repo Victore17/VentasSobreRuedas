@@ -3,25 +3,22 @@ package victor.mexico.ventassobreruedas.ui.summary
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -52,12 +49,14 @@ import java.time.LocalDate
 fun SummaryRoute(
     date: LocalDate,
     onBack: () -> Unit,
+    onAddSales: (LocalDate) -> Unit,
     viewModel: SummaryViewModel = viewModel(factory = SummaryViewModel.factory(salesRepository(), date)),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     SummaryScreen(
         uiState = uiState,
         onBack = onBack,
+        onAddSales = onAddSales,
         onDateSelected = viewModel::selectDate,
         onUpdateSale = viewModel::updateSale,
         onDeleteSale = viewModel::deleteSale,
@@ -69,6 +68,7 @@ fun SummaryRoute(
 fun SummaryScreen(
     uiState: SummaryUiState,
     onBack: () -> Unit,
+    onAddSales: (LocalDate) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
     onUpdateSale: (id: String, productName: String, priceCents: Long) -> Unit,
     onDeleteSale: (id: String) -> Unit,
@@ -130,6 +130,12 @@ fun SummaryScreen(
                             contentDescription = stringResource(R.string.change_date),
                         )
                     }
+                    IconButton(onClick = { onAddSales(uiState.date) }) {
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = stringResource(R.string.add_sales_for_date),
+                        )
+                    }
                 },
             )
         },
@@ -163,15 +169,6 @@ fun SummaryScreen(
                                     Text(stringResource(R.string.today))
                                 }
                             }
-                        }
-                        OutlinedButton(onClick = { showDatePicker = true }) {
-                            Icon(
-                                Icons.Default.DateRange,
-                                contentDescription = null,
-                                modifier = Modifier.size(ButtonDefaults.IconSize),
-                            )
-                            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                            Text(stringResource(R.string.change_date))
                         }
                         Text(
                             stringResource(R.string.total_sold),
@@ -223,6 +220,7 @@ private fun SummaryScreenPreview() {
                 sales = listOf(Sale("1", "Pan", 12000, Instant.now())),
             ),
             onBack = {},
+            onAddSales = {},
             onDateSelected = {},
             onUpdateSale = { _, _, _ -> },
             onDeleteSale = {},

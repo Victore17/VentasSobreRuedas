@@ -27,7 +27,11 @@ import java.time.LocalDate
 data object HomeKey : NavKey
 
 @Serializable
-data object SalesKey : NavKey
+data class SalesKey(val epochDay: Long) : NavKey {
+    constructor(date: LocalDate) : this(date.toEpochDay())
+
+    val date: LocalDate get() = LocalDate.ofEpochDay(epochDay)
+}
 
 @Serializable
 data object SalesDaysKey : NavKey
@@ -75,18 +79,20 @@ private fun SignedInNavigation(userName: String?, onSignOut: () -> Unit) {
             entry<HomeKey> {
                 HomeScreen(
                     userName = userName,
-                    onRegisterSales = { backStack.add(SalesKey) },
+                    onRegisterSales = { backStack.add(SalesKey(LocalDate.now())) },
                     onViewSales = { backStack.add(SalesDaysKey) },
                     onSignOut = onSignOut,
                 )
             }
-            entry<SalesKey> {
+            entry<SalesKey> { key ->
                 SalesRoute(
+                    date = key.date,
                     onBack = { backStack.removeLastOrNull() },
-                    // Al finalizar se reemplaza el registro por el resumen: "atrás" vuelve a Home.
+                    // Si se llegó desde Detalles, "Finalizar" solo regresa ahí. Si se llegó desde
+                    // Home, se reemplaza el registro por los detalles del día: "atrás" vuelve a Home.
                     onFinishDay = {
                         backStack.removeLastOrNull()
-                        backStack.add(SummaryKey(LocalDate.now()))
+                        if (backStack.lastOrNull() !is SummaryKey) backStack.add(SummaryKey(key.date))
                     },
                 )
             }
@@ -97,7 +103,11 @@ private fun SignedInNavigation(userName: String?, onSignOut: () -> Unit) {
                 )
             }
             entry<SummaryKey> { key ->
-                SummaryRoute(date = key.date, onBack = { backStack.removeLastOrNull() })
+                SummaryRoute(
+                    date = key.date,
+                    onBack = { backStack.removeLastOrNull() },
+                    onAddSales = { date -> backStack.add(SalesKey(date)) },
+                )
             }
         },
     )

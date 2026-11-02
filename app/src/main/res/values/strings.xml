@@ -14,7 +14,7 @@
     <string name="date">Fecha</string>
     <string name="total_sold">Total vendido</string>
     <string name="back">Volver</string>
-    <string name="home_title">Home</string>
+    <string name="home_title">Inicio</string>
     <string name="view_sales">Ver ventas</string>
     <string name="change_date">Cambiar fecha</string>
     <string name="today">Hoy</string>
@@ -43,4 +43,5 @@
     <string name="sign_in_footer">Tus datos se guardan de forma segura</string>
     <string name="greeting">Hola, %1$s</string>
     <string name="greeting_generic">Hola</string>
+    <string name="add_sales_for_date">Registrar ventas en esta fecha</string>
 </resources>

@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.map
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.ZoneId
 
 data class Sale(
@@ -68,9 +69,17 @@ class SalesRepository(
     // Las escrituras no esperan al servidor: Firestore las aplica localmente al instante
     // y las sube cuando hay conexión. Esperarlas dejaría la app trabada sin internet.
 
-    /** Registra la venta; la fecha se asigna automáticamente con la hora actual. */
-    fun addSale(productName: String, priceCents: Long) {
-        sales.document().set(saleFields(productName, priceCents, Instant.now(clock)))
+    /**
+     * Registra la venta en [day] (hoy por omisión). Hoy se usa la hora exacta; en otro día
+     * se usa ese día con la hora actual, para que quede dentro de su rango y en orden.
+     */
+    fun addSale(productName: String, priceCents: Long, day: LocalDate = today()) {
+        val createdAt = if (day == today()) {
+            Instant.now(clock)
+        } else {
+            day.atTime(LocalTime.now(clock)).atZone(clock.zone).toInstant()
+        }
+        sales.document().set(saleFields(productName, priceCents, createdAt))
     }
 
     /** Corrige el producto y el precio; la fecha original de la venta se conserva. */

@@ -27,8 +27,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -42,13 +45,16 @@ import victor.mexico.ventassobreruedas.salesRepository
 import victor.mexico.ventassobreruedas.data.repository.Sale
 import victor.mexico.ventassobreruedas.ui.theme.MyApplicationTheme
 import victor.mexico.ventassobreruedas.util.formatCents
+import victor.mexico.ventassobreruedas.util.formatLongDate
 import java.time.Instant
+import java.time.LocalDate
 
 @Composable
 fun SalesRoute(
+    date: LocalDate,
     onBack: () -> Unit,
     onFinishDay: () -> Unit,
-    viewModel: SalesViewModel = viewModel(factory = SalesViewModel.factory(salesRepository())),
+    viewModel: SalesViewModel = viewModel(factory = SalesViewModel.factory(salesRepository(), date)),
 ) {
     val form by viewModel.form.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -71,17 +77,31 @@ fun SalesScreen(
     uiState: SalesUiState,
     onProductNameChange: (String) -> Unit,
     onPriceChange: (String) -> Unit,
-    onAddSale: () -> Unit,
+    onAddSale: () -> Boolean,
     onDeleteSale: (String) -> Unit,
     onBack: () -> Unit,
     onFinishDay: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // Tras registrar una venta, el cursor vuelve a "Producto" para capturar la siguiente.
+    val productFocus = remember { FocusRequester() }
+    val submit = { if (onAddSale()) productFocus.requestFocus() }
     Scaffold(
         modifier = modifier.imePadding(),
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.register_sales_title)) },
+                title = {
+                    Column {
+                        Text(stringResource(R.string.register_sales_title))
+                        if (!uiState.isToday) {
+                            Text(
+                                formatLongDate(uiState.date),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
@@ -110,7 +130,8 @@ fun SalesScreen(
                     form = form,
                     onProductNameChange = onProductNameChange,
                     onPriceChange = onPriceChange,
-                    onAddSale = onAddSale,
+                    onAddSale = submit,
+                    productFocus = productFocus,
                 )
             }
             item {
@@ -136,7 +157,9 @@ fun SalesScreen(
             if (uiState.sales.isEmpty()) {
                 item {
                     Text(
-                        stringResource(R.string.no_sales_yet),
+                        stringResource(
+                            if (uiState.isToday) R.string.no_sales_yet else R.string.no_sales_for_date,
+                        ),
                         modifier = Modifier.padding(16.dp),
                         style = MaterialTheme.typography.bodyMedium,
                     )
@@ -159,6 +182,7 @@ private fun SaleFormCard(
     onProductNameChange: (String) -> Unit,
     onPriceChange: (String) -> Unit,
     onAddSale: () -> Unit,
+    productFocus: FocusRequester,
 ) {
     Column(
         modifier = Modifier.padding(16.dp),
@@ -177,7 +201,9 @@ private fun SaleFormCard(
                 capitalization = KeyboardCapitalization.Sentences,
                 imeAction = ImeAction.Next,
             ),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(productFocus),
         )
         OutlinedTextField(
             value = form.price,
@@ -208,12 +234,13 @@ private fun SalesScreenPreview() {
         SalesScreen(
             form = SaleForm(),
             uiState = SalesUiState(
+                date = LocalDate.now(),
                 sales = listOf(Sale("1", "Café", 3500, Instant.now())),
                 totalCents = 3500,
             ),
             onProductNameChange = {},
             onPriceChange = {},
-            onAddSale = {},
+            onAddSale = { true },
             onDeleteSale = {},
             onBack = {},
             onFinishDay = {},

@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import java.time.LocalDate
 
 data class SaleForm(
     val productName: String = "",
@@ -23,45 +24,55 @@ data class SaleForm(
 )
 
 data class SalesUiState(
+    val date: LocalDate,
+    val isToday: Boolean = true,
     val sales: List<Sale> = emptyList(),
     val totalCents: Long = 0,
 )
 
-class SalesViewModel(private val repository: SalesRepository) : ViewModel() {
+/** Registro de ventas para [date]; normalmente hoy, o el día abierto en Detalles. */
+class SalesViewModel(
+    private val repository: SalesRepository,
+    date: LocalDate,
+) : ViewModel() {
 
     private val _form = MutableStateFlow(SaleForm())
     val form: StateFlow<SaleForm> = _form.asStateFlow()
 
-    private val today = repository.today()
+    // No se permiten fechas futuras.
+    private val date = minOf(date, repository.today())
+    private val isToday = this.date == repository.today()
 
     val uiState: StateFlow<SalesUiState> = combine(
-        repository.observeSales(today),
-        repository.observeTotalCents(today),
-    ) { sales, total -> SalesUiState(sales, total) }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SalesUiState())
+        repository.observeSales(this.date),
+        repository.observeTotalCents(this.date),
+    ) { sales, total -> SalesUiState(this.date, isToday, sales, total) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SalesUiState(this.date, isToday))
 
     fun onProductNameChange(value: String) =
         _form.update { it.copy(productName = value, productError = false) }
 
     fun onPriceChange(value: String) = _form.update { it.copy(price = value, priceError = false) }
 
-    fun addSale() {
+    /** Devuelve true si la venta se registró (el formulario era válido). */
+    fun addSale(): Boolean {
         val current = _form.value
         val name = current.productName.trim()
         val cents = parsePriceToCents(current.price)
         if (name.isEmpty() || cents == null) {
             _form.update { it.copy(productError = name.isEmpty(), priceError = cents == null) }
-            return
+            return false
         }
-        repository.addSale(name, cents)
+        repository.addSale(name, cents, date)
         _form.value = SaleForm()
+        return true
     }
 
     fun deleteSale(id: String) = repository.deleteSale(id)
 
     companion object {
-        fun factory(repository: SalesRepository) = viewModelFactory {
-            initializer { SalesViewModel(repository) }
+        fun factory(repository: SalesRepository, date: LocalDate) = viewModelFactory {
+            initializer { SalesViewModel(repository, date) }
         }
     }
 }
