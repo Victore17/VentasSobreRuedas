@@ -36,6 +36,8 @@
     <string name="sign_in_google">Sign in with Google</string>
     <string name="sign_in_explanation">Your sales are saved in the cloud with your Google account.</string>
     <string name="sign_out">Sign out</string>
+    <string name="sign_out_title">Sign out?</string>
+    <string name="sign_out_message">Do you want to end your session?</string>
     <string name="error_no_google_account">There\'s no Google account on this phone. Add one in Settings.</string>
     <string name="error_sign_in">Couldn\'t sign in. Check your connection and try again.</string>
     <string name="welcome">Welcome!</string>

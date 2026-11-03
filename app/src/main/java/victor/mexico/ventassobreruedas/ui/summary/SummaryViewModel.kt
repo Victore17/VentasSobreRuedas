@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import java.time.LocalDate
 
@@ -39,6 +40,9 @@ class SummaryViewModel(
                 repository.observeSales(date),
                 repository.observeTotalCents(date),
             ) { sales, total -> SummaryUiState(date, repository.today(), total, sales) }
+                // La fecha nueva se publica de inmediato, sin esperar a Firestore; si no, el "+"
+                // seguiría registrando en el día anterior hasta que llegaran los datos.
+                .onStart { emit(SummaryUiState(date, repository.today())) }
         }
         .stateIn(
             viewModelScope,

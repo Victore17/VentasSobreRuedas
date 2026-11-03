@@ -38,6 +38,8 @@
     <string name="sign_in_google">Войти через Google</string>
     <string name="sign_in_explanation">Ваши продажи хранятся в облаке в вашем аккаунте Google.</string>
     <string name="sign_out">Выйти</string>
+    <string name="sign_out_title">Выйти из аккаунта?</string>
+    <string name="sign_out_message">Вы хотите завершить сеанс?</string>
     <string name="error_no_google_account">На этом телефоне нет аккаунта Google. Добавьте его в настройках.</string>
     <string name="error_sign_in">Не удалось войти. Проверьте подключение и попробуйте ещё раз.</string>
     <string name="welcome">Добро пожаловать!</string>

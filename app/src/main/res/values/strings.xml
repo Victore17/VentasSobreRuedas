@@ -37,6 +37,8 @@
     <string name="sign_in_google">Iniciar sesión con Google</string>
     <string name="sign_in_explanation">Tus ventas se guardan en la nube con tu cuenta de Google.</string>
     <string name="sign_out">Cerrar sesión</string>
+    <string name="sign_out_title">¿Cerrar sesión?</string>
+    <string name="sign_out_message">¿Quieres finalizar tu sesión?</string>
     <string name="error_no_google_account">No hay ninguna cuenta de Google en este teléfono. Agrega una en Ajustes.</string>
     <string name="error_sign_in">No se pudo iniciar sesión. Revisa tu conexión e inténtalo de nuevo.</string>
     <string name="welcome">¡Bienvenido!</string>
