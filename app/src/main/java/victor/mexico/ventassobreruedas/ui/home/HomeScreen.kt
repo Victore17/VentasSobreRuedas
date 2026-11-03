@@ -46,6 +46,7 @@ import victor.mexico.ventassobreruedas.R
 import victor.mexico.ventassobreruedas.ui.components.MaxFormWidth
 import victor.mexico.ventassobreruedas.ui.theme.MyApplicationTheme
 import victor.mexico.ventassobreruedas.ui.components.localizedLongDate
+import victor.mexico.ventassobreruedas.ui.report.BarChart
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,6 +55,7 @@ fun HomeScreen(
     userName: String?,
     onRegisterSales: () -> Unit,
     onViewSales: () -> Unit,
+    onViewReport: () -> Unit,
     onSignOut: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -138,6 +140,13 @@ fun HomeScreen(
                 ) {
                     ButtonContent(Icons.Default.DateRange, stringResource(R.string.view_sales))
                 }
+                Spacer(Modifier.height(16.dp))
+                FilledTonalButton(
+                    onClick = onViewReport,
+                    modifier = Modifier.homeButton(),
+                ) {
+                    ButtonContent(Icons.Default.BarChart, stringResource(R.string.report_title))
+                }
             }
         }
     }
@@ -159,6 +168,6 @@ private fun ButtonContent(icon: ImageVector, text: String) {
 @Composable
 private fun HomeScreenPreview() {
     MyApplicationTheme {
-        HomeScreen(userName = "Victor", onRegisterSales = {}, onViewSales = {}, onSignOut = {})
+        HomeScreen(userName = "Victor", onRegisterSales = {}, onViewSales = {}, onViewReport = {}, onSignOut = {})
     }
 }

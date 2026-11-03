@@ -46,14 +46,18 @@ class SalesRepository(
 
     fun today(): LocalDate = LocalDate.now(clock)
 
-    fun observeSales(day: LocalDate): Flow<List<Sale>> {
-        val (from, to) = day.toTimestampRange()
-        return sales
-            .whereGreaterThanOrEqualTo(FIELD_CREATED_AT, from)
-            .whereLessThan(FIELD_CREATED_AT, to)
+    /** Zona con la que se decide a qué día pertenece cada venta. */
+    val zone: ZoneId get() = clock.zone
+
+    fun observeSales(day: LocalDate): Flow<List<Sale>> = observeSalesBetween(day, day.plusDays(1))
+
+    /** Ventas desde el inicio de [from] hasta antes de [toExclusive], de la más reciente a la más antigua. */
+    fun observeSalesBetween(from: LocalDate, toExclusive: LocalDate): Flow<List<Sale>> =
+        sales
+            .whereGreaterThanOrEqualTo(FIELD_CREATED_AT, from.startTimestamp())
+            .whereLessThan(FIELD_CREATED_AT, toExclusive.startTimestamp())
             .orderBy(FIELD_CREATED_AT, Query.Direction.DESCENDING)
             .observe()
-    }
 
     fun observeTotalCents(day: LocalDate): Flow<Long> =
         observeSales(day).map { list -> list.sumOf { it.priceCents } }
@@ -101,12 +105,7 @@ class SalesRepository(
                 emit(emptyList())
             }
 
-    private fun LocalDate.toTimestampRange(): Pair<Timestamp, Timestamp> {
-        val zone: ZoneId = clock.zone
-        val from = atStartOfDay(zone).toInstant()
-        val to = plusDays(1).atStartOfDay(zone).toInstant()
-        return Timestamp(from) to Timestamp(to)
-    }
+    private fun LocalDate.startTimestamp(): Timestamp = Timestamp(atStartOfDay(clock.zone).toInstant())
 
     private fun DocumentSnapshot.toSale(): Sale? {
         val name = getString(FIELD_PRODUCT_NAME) ?: return null

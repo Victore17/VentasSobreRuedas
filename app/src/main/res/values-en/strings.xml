@@ -49,6 +49,29 @@
     <string name="greeting">Hi, %1$s</string>
     <string name="greeting_generic">Hi</string>
     <string name="add_sales_for_date">Record sales on this date</string>
+    <!-- Resumen semanal/mensual y su PDF. -->
+    <string name="report_title">Summary</string>
+    <string name="tab_week">Week</string>
+    <string name="tab_month">Month</string>
+    <string name="previous_period">Previous period</string>
+    <string name="next_period">Next period</string>
+    <string name="share_pdf">Share PDF</string>
+    <string name="stat_total">Total</string>
+    <string name="stat_sales">Sales</string>
+    <string name="stat_average">Average per day</string>
+    <string name="stat_best_day">Best day</string>
+    <string name="vs_previous_week">%1$s vs. last week</string>
+    <string name="vs_previous_month">%1$s vs. last month</string>
+    <string name="no_sales_in_period">No sales in this period.</string>
+    <string name="pdf_title_week">Weekly summary</string>
+    <string name="pdf_title_month">Monthly summary</string>
+    <string name="pdf_generated">Generated on %1$s</string>
+    <string name="pdf_by_day">Sales by day</string>
+    <string name="pdf_details">Sales detail</string>
+    <string name="pdf_time">Time</string>
+    <string name="pdf_page">Page %1$d</string>
+    <string name="pdf_share_chooser">Share summary</string>
+    <string name="pdf_error">Couldn\'t create the PDF.</string>
     <string name="date_format">EEEE, MMMM d, yyyy</string>
     <string name="date_locale">en</string>
 </resources>

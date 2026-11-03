@@ -50,6 +50,29 @@
     <string name="greeting">Hola, %1$s</string>
     <string name="greeting_generic">Hola</string>
     <string name="add_sales_for_date">Registrar ventas en esta fecha</string>
+    <!-- Resumen semanal/mensual y su PDF. -->
+    <string name="report_title">Resumen</string>
+    <string name="tab_week">Semana</string>
+    <string name="tab_month">Mes</string>
+    <string name="previous_period">Periodo anterior</string>
+    <string name="next_period">Periodo siguiente</string>
+    <string name="share_pdf">Compartir PDF</string>
+    <string name="stat_total">Total</string>
+    <string name="stat_sales">Ventas</string>
+    <string name="stat_average">Promedio por día</string>
+    <string name="stat_best_day">Mejor día</string>
+    <string name="vs_previous_week">%1$s vs. la semana anterior</string>
+    <string name="vs_previous_month">%1$s vs. el mes anterior</string>
+    <string name="no_sales_in_period">No hay ventas en este periodo.</string>
+    <string name="pdf_title_week">Resumen semanal</string>
+    <string name="pdf_title_month">Resumen mensual</string>
+    <string name="pdf_generated">Generado el %1$s</string>
+    <string name="pdf_by_day">Ventas por día</string>
+    <string name="pdf_details">Detalle de ventas</string>
+    <string name="pdf_time">Hora</string>
+    <string name="pdf_page">Página %1$d</string>
+    <string name="pdf_share_chooser">Compartir resumen</string>
+    <string name="pdf_error">No se pudo generar el PDF.</string>
     <!-- Formato de fecha larga (DateTimeFormatter) y su idioma; ver localizedLongDate. -->
     <string name="date_format">EEEE dd \'de\' MMMM \'de\' yyyy</string>
     <string name="date_locale">es</string>

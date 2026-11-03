@@ -36,4 +36,10 @@ class MoneyTest {
         assertEquals("1 540,00 $", normalized(formatCents(154000, Locale.forLanguageTag("ru-RU"))))
         assertEquals("$1,540.00", formatCents(154000, Locale.forLanguageTag("es-MX")))
     }
+
+    @Test
+    fun formatsShortAmountsWithoutCents() {
+        assertEquals("$1,235", formatCentsShort(123450, Locale.US))
+        assertEquals("$35", formatCentsShort(3500, Locale.US))
+    }
 }

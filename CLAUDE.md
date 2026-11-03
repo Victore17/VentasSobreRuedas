@@ -22,10 +22,10 @@ The build requires `app/google-services.json`, which is git-ignored; download it
 ## Architecture
 
 - **DI**: manual, in `VentasApplication`. Composables get dependencies through `salesRepository()` / `authRepository()` and pass them to `ViewModel` factories (`XViewModel.factory(...)` companion functions).
-- **Auth gating**: `AppNavigation` observes `AuthRepository.observeUser()`; with no user it shows `LoginRoute`, otherwise a `NavDisplay` back stack (`HomeKey`, `SalesKey`, `SalesDaysKey`, `SummaryKey(epochDay)`). Nav keys are `@Serializable` `NavKey`s; dates travel as epoch days.
+- **Auth gating**: `AppNavigation` observes `AuthRepository.observeUser()`; with no user it shows `LoginRoute`, otherwise a `NavDisplay` back stack (`HomeKey`, `SalesKey`, `SalesDaysKey`, `SummaryKey(epochDay)`, `ReportKey`). Nav keys are `@Serializable` `NavKey`s; dates travel as epoch days.
 - **Data**: `SalesRepository` is per-user (`users/{uid}/sales/{saleId}` in Firestore; fields `productName`, `priceCents`, `createdAt` Timestamp). `VentasApplication.salesRepository` throws if there is no signed-in user, so only use it behind the auth gate.
 - **Offline**: Firestore's local cache is the offline store. Writes (`addSale`/`updateSale`/`deleteSale`) are intentionally fire-and-forget — never `await()` them or the UI blocks without network. Reads are `snapshots()` flows with `.catch` to avoid crashing `stateIn` on permission errors.
-- **Day boundaries**: "a day" is computed with the repository's `Clock` zone (`toTimestampRange`, grouping in `observeSalesDays`); keep both consistent.
+- **Day boundaries**: "a day" is computed with the repository's `Clock` zone (`startTimestamp` in `observeSalesBetween`, grouping in `observeSalesDays` and `buildPeriodSummary`); keep them consistent.
 - **Money** is always `Long` cents (`util/Money.kt`: `parsePriceToCents`, `formatCents`). Dates are formatted in Spanish regardless of device locale (`util/Dates.kt`).
 - **Languages**: Spanish is the default (`values/`), with `values-en/` and `values-ru/`. Every new string must be added to all three files. The language follows only the device setting — don't enable per-app language (`localeConfig` / `generateLocaleConfig`). Long dates use `localizedLongDate` (pattern + locale come from `date_format`/`date_locale` strings); money is always pesos with `$` (`formatCents`), only number formatting follows the locale.
 - **Theme**: fixed turquoise palette in `ui/theme` (dynamic color deliberately disabled). Login header gradient uses `SeaShallow`/`SeaDeep`.
@@ -44,3 +44,7 @@ The build requires `app/google-services.json`, which is git-ignored; download it
 - Cada que modifiques un archivo .kt, corre la app en el dispositivo conectado. Si no hay ninguno físico conectado, entonces no lo hagas.
 
 - No subas screenshots a github al menos que yo te lo pida explicitamente.
+
+## Github
+
+- Los commits de github (las descripciones) tienen que estar en inglés.

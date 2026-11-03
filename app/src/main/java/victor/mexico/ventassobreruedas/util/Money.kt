@@ -20,11 +20,23 @@ fun parsePriceToCents(input: String): Long? {
  * sigue el idioma del teléfono, pero la moneda siempre es pesos con "$": sin esto, un teléfono
  * en ruso mostraría rublos (₽) y uno de Reino Unido libras (£) para las mismas cantidades.
  */
-fun formatCents(cents: Long, locale: Locale = Locale.getDefault()): String {
+fun formatCents(cents: Long, locale: Locale = Locale.getDefault()): String =
+    pesoFormat(locale).format(BigDecimal.valueOf(cents, 2))
+
+/** Como [formatCents] pero redondeado a pesos ("$1,235"), para etiquetas angostas como las de la gráfica. */
+fun formatCentsShort(cents: Long, locale: Locale = Locale.getDefault()): String {
+    val format = pesoFormat(locale)
+    format.minimumFractionDigits = 0
+    format.maximumFractionDigits = 0
+    format.roundingMode = RoundingMode.HALF_UP
+    return format.format(BigDecimal.valueOf(cents, 2))
+}
+
+private fun pesoFormat(locale: Locale): NumberFormat {
     val format = NumberFormat.getCurrencyInstance(locale)
     format.currency = Currency.getInstance("MXN")
     if (format is DecimalFormat) {
         format.decimalFormatSymbols = format.decimalFormatSymbols.apply { currencySymbol = "$" }
     }
-    return format.format(BigDecimal.valueOf(cents, 2))
+    return format
 }

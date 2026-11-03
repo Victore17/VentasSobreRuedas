@@ -17,6 +17,7 @@ import victor.mexico.ventassobreruedas.authRepository
 import victor.mexico.ventassobreruedas.ui.days.SalesDaysRoute
 import victor.mexico.ventassobreruedas.ui.home.HomeScreen
 import victor.mexico.ventassobreruedas.ui.login.LoginRoute
+import victor.mexico.ventassobreruedas.ui.report.ReportRoute
 import victor.mexico.ventassobreruedas.ui.sales.SalesRoute
 import victor.mexico.ventassobreruedas.ui.summary.SummaryRoute
 import kotlinx.coroutines.launch
@@ -35,6 +36,9 @@ data class SalesKey(val epochDay: Long) : NavKey {
 
 @Serializable
 data object SalesDaysKey : NavKey
+
+@Serializable
+data object ReportKey : NavKey
 
 /** La fecha se guarda como epoch day porque LocalDate no es serializable directamente. */
 @Serializable
@@ -59,6 +63,8 @@ fun AppNavigation() {
             SignedInNavigation(
                 // Solo el primer nombre: "Victor Manuel López" -> "Victor".
                 userName = currentUser.displayName?.substringBefore(' '),
+                // El nombre completo va en el encabezado del PDF del resumen.
+                fullName = currentUser.displayName,
                 onSignOut = { scope.launch { authRepository.signOut(context) } },
             )
         }
@@ -66,7 +72,7 @@ fun AppNavigation() {
 }
 
 @Composable
-private fun SignedInNavigation(userName: String?, onSignOut: () -> Unit) {
+private fun SignedInNavigation(userName: String?, fullName: String?, onSignOut: () -> Unit) {
     val backStack = rememberNavBackStack(HomeKey)
     NavDisplay(
         backStack = backStack,
@@ -81,6 +87,7 @@ private fun SignedInNavigation(userName: String?, onSignOut: () -> Unit) {
                     userName = userName,
                     onRegisterSales = { backStack.add(SalesKey(LocalDate.now())) },
                     onViewSales = { backStack.add(SalesDaysKey) },
+                    onViewReport = { backStack.add(ReportKey) },
                     onSignOut = onSignOut,
                 )
             }
@@ -98,6 +105,13 @@ private fun SignedInNavigation(userName: String?, onSignOut: () -> Unit) {
             }
             entry<SalesDaysKey> {
                 SalesDaysRoute(
+                    onBack = { backStack.removeLastOrNull() },
+                    onDayClick = { date -> backStack.add(SummaryKey(date)) },
+                )
+            }
+            entry<ReportKey> {
+                ReportRoute(
+                    userName = fullName,
                     onBack = { backStack.removeLastOrNull() },
                     onDayClick = { date -> backStack.add(SummaryKey(date)) },
                 )

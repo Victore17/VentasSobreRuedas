@@ -51,6 +51,29 @@
     <string name="greeting">Привет, %1$s</string>
     <string name="greeting_generic">Привет</string>
     <string name="add_sales_for_date">Добавить продажи за эту дату</string>
+    <!-- Resumen semanal/mensual y su PDF. -->
+    <string name="report_title">Сводка</string>
+    <string name="tab_week">Неделя</string>
+    <string name="tab_month">Месяц</string>
+    <string name="previous_period">Предыдущий период</string>
+    <string name="next_period">Следующий период</string>
+    <string name="share_pdf">Поделиться PDF</string>
+    <string name="stat_total">Итого</string>
+    <string name="stat_sales">Продажи</string>
+    <string name="stat_average">В среднем за день</string>
+    <string name="stat_best_day">Лучший день</string>
+    <string name="vs_previous_week">%1$s к прошлой неделе</string>
+    <string name="vs_previous_month">%1$s к прошлому месяцу</string>
+    <string name="no_sales_in_period">За этот период продаж нет.</string>
+    <string name="pdf_title_week">Сводка за неделю</string>
+    <string name="pdf_title_month">Сводка за месяц</string>
+    <string name="pdf_generated">Создано %1$s</string>
+    <string name="pdf_by_day">Продажи по дням</string>
+    <string name="pdf_details">Подробности продаж</string>
+    <string name="pdf_time">Время</string>
+    <string name="pdf_page">Страница %1$d</string>
+    <string name="pdf_share_chooser">Поделиться сводкой</string>
+    <string name="pdf_error">Не удалось создать PDF.</string>
     <string name="date_format">EEEE, d MMMM yyyy</string>
     <string name="date_locale">ru</string>
 </resources>

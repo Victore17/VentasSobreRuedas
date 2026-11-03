@@ -112,7 +112,7 @@ fun SalesDaysScreen(
 }
 
 @Composable
-private fun SalesDayItem(day: SalesDay, onClick: () -> Unit) {
+internal fun SalesDayItem(day: SalesDay, onClick: () -> Unit) {
     ListItem(
         modifier = Modifier.clickable(onClick = onClick),
         headlineContent = { Text(localizedLongDate(day.date), fontWeight = FontWeight.SemiBold) },
