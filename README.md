@@ -1,44 +1,49 @@
 # Ventas sobre ruedas
 
-App Android para registrar las ventas del día y consultarlas después. Las ventas se guardan en la nube (Firebase) con tu cuenta de Google y la app funciona también sin internet: lo registrado sin señal se sincroniza solo al volver la conexión.
+Android app to record daily sales and review them later. Sales are stored in the cloud (Firebase) under your Google account, and the app also works offline: anything recorded without signal syncs automatically once the connection is back.
 
-## Capturas
+## Screenshots
 
-| Inicio de sesión | Home | Registrar ventas |
+| Home | Record sales | Sales by day |
 |:---:|:---:|:---:|
-| <img src="docs/screenshots/login.png" width="240" alt="Pantalla de inicio de sesión"> | <img src="docs/screenshots/home.png" width="240" alt="Pantalla principal"> | <img src="docs/screenshots/registrar.png" width="240" alt="Registrar ventas"> |
-| **Ventas por día** | **Detalles del día** | **Editar y eliminar** |
-| <img src="docs/screenshots/ventas.png" width="240" alt="Lista de días con ventas"> | <img src="docs/screenshots/detalles.png" width="240" alt="Detalles del día"> | <img src="docs/screenshots/deslizar.png" width="240" alt="Venta deslizada mostrando Editar y Eliminar"> |
+| <img src="docs/screenshots/home.png" width="240" alt="Home screen"> | <img src="docs/screenshots/register.png" width="240" alt="Record sales"> | <img src="docs/screenshots/sales-days.png" width="240" alt="List of days with sales"> |
+| **Day details** | **Edit and delete** | **Weekly summary** |
+| <img src="docs/screenshots/details.png" width="240" alt="Day details"> | <img src="docs/screenshots/swipe.png" width="240" alt="Sale swiped to show Edit and Delete"> | <img src="docs/screenshots/summary-week.png" width="240" alt="Weekly summary with bar chart"> |
+| **Monthly summary** | **PDF report** | |
+| <img src="docs/screenshots/summary-month.png" width="240" alt="Monthly summary with bar chart"> | <img src="docs/screenshots/pdf-report.png" width="240" alt="First page of the PDF report"> | |
 
-## Funciones
+## Features
 
-- **Inicio de sesión con Google.** Las ventas quedan ligadas a tu cuenta, no al teléfono.
-- **Registrar ventas:** producto y precio; la fecha y hora se asignan automáticamente.
-- **Ver ventas:** lista de los días con ventas, con número de ventas y total de cada día.
-- **Detalles del día:** total vendido y lista de ventas. Al deslizar una venta hacia la izquierda aparecen **Editar** y **Eliminar** (con confirmación).
-- **Sin internet:** se puede registrar, editar y eliminar sin señal.
-- Tema turquesa en modo claro y oscuro.
-- **Idiomas:** español, inglés y ruso. La app usa el idioma configurado en el teléfono (con cualquier otro idioma se muestra en español). Las cantidades siempre se muestran en pesos (`$`).
+- **Google sign-in.** Sales belong to your account, not to the phone. Signing out asks for confirmation.
+- **Record sales:** product and price; date and time are assigned automatically. If you tap **Finish** with a product and price typed in but not yet added, the app asks whether to record that sale first.
+- **View sales:** list of days with sales, showing the number of sales and the total for each day.
+- **Day details:** total sold and the list of sales for any date. Swipe a sale to the left to reveal **Edit** and **Delete** (with confirmation). The **+** button records sales on the selected date, so you can add sales for past days.
+- **Summary:** weekly (Monday–Sunday) and monthly views with total, number of sales, average per day with sales, best day and the change versus the previous period, plus a bar chart with one bar per day. Tap a bar or a day to open its details.
+- **PDF report:** share the selected week or month as a PDF (totals, chart, sales by day and every sale with its time and price) through WhatsApp, email, Drive or any other app.
+- **Offline:** sales can be recorded, edited and deleted without signal.
+- Turquoise theme in light and dark mode.
+- **Languages:** Spanish, English and Russian. The app follows the phone's language (any other language falls back to Spanish). Amounts are always shown in Mexican pesos (`$`).
 
-## Tecnologías
+## Tech stack
 
-- Kotlin 2.3, Jetpack Compose y Material 3
+- Kotlin 2.3, Jetpack Compose and Material 3
 - Navigation 3
-- Firebase Authentication (Google, vía Credential Manager)
+- Firebase Authentication (Google, via Credential Manager)
 - Cloud Firestore
+- `android.graphics.pdf.PdfDocument` for the PDF report (no extra libraries)
 - minSdk 26 (Android 8.0)
 
-## Configuración
+## Setup
 
-El archivo `app/google-services.json` **no está en el repositorio**; sin él la app no compila. Para obtenerlo:
+The file `app/google-services.json` is **not in the repository**; the app won't build without it. To get it:
 
-1. En la [consola de Firebase](https://console.firebase.google.com), abre el proyecto (o crea uno) y registra una app Android con el paquete `victor.mexico.ventassobreruedas`.
-2. Agrega la huella SHA-1 de tu llave de firma en ⚙️ **Configuración del proyecto → Tus apps → Agregar huella digital**. Para la llave de depuración:
+1. In the [Firebase console](https://console.firebase.google.com), open the project (or create one) and register an Android app with the package `victor.mexico.ventassobreruedas`.
+2. Add your signing key's SHA-1 fingerprint under ⚙️ **Project settings → Your apps → Add fingerprint**. For the debug key:
    ```bash
    ./gradlew :app:signingReport
    ```
-3. En **Authentication → Método de acceso**, habilita **Google**.
-4. Crea la base de datos en **Firestore Database** (modo producción) y publica estas reglas:
+3. Under **Authentication → Sign-in method**, enable **Google**.
+4. Create the database in **Firestore Database** (production mode) and publish these rules:
    ```
    rules_version = '2';
    service cloud.firestore {
@@ -49,32 +54,35 @@ El archivo `app/google-services.json` **no está en el repositorio**; sin él la
      }
    }
    ```
-5. Descarga `google-services.json` (después de los pasos 2 y 3, para que incluya los datos de Google) y colócalo en `app/`.
+5. Download `google-services.json` (after steps 2 and 3, so it includes the Google sign-in data) and place it in `app/`.
 
-## Compilar y probar
+## Build and test
 
 ```bash
-./gradlew :app:assembleDebug        # compilar
-./gradlew :app:installDebug         # instalar en un teléfono conectado
-./gradlew :app:testDebugUnitTest    # pruebas unitarias
+./gradlew :app:assembleDebug        # build
+./gradlew :app:installDebug         # install on a connected phone
+./gradlew :app:testDebugUnitTest    # unit tests
+./gradlew :app:lintDebug            # Android lint
 ```
 
-También se puede abrir el proyecto en Android Studio y usar **Run ▶**.
+You can also open the project in Android Studio and use **Run ▶**.
 
-## Estructura
+## Project structure
 
 ```
 app/src/main/java/victor/mexico/ventassobreruedas/
-├── data/auth/          Inicio de sesión con Google (AuthRepository)
-├── data/repository/    Ventas en Firestore (SalesRepository)
-├── ui/login/           Pantalla de inicio de sesión
-├── ui/home/            Pantalla principal
-├── ui/sales/           Registrar ventas
-├── ui/days/            Lista de días con ventas
-├── ui/summary/         Detalles del día, edición y borrado
-├── ui/navigation/      Navegación y control de sesión
-├── ui/theme/           Colores y tipografía
-└── util/               Formato de dinero y fechas
+├── data/auth/          Google sign-in (AuthRepository)
+├── data/repository/    Sales in Firestore (SalesRepository) and period totals (PeriodSummary)
+├── export/             PDF report generation and sharing (ReportPdf)
+├── ui/login/           Sign-in screen
+├── ui/home/            Home screen
+├── ui/sales/           Record sales
+├── ui/days/            List of days with sales
+├── ui/summary/         Day details, editing and deleting
+├── ui/report/          Weekly/monthly summary and bar chart
+├── ui/navigation/      Navigation and session handling
+├── ui/theme/           Colors and typography
+└── util/               Money, date and period formatting
 ```
 
-Los datos se guardan en Firestore en `users/{uid}/sales/{saleId}` con los campos `productName`, `priceCents` (precio en centavos) y `createdAt`.
+Data is stored in Firestore at `users/{uid}/sales/{saleId}` with the fields `productName`, `priceCents` (price in cents) and `createdAt`.
