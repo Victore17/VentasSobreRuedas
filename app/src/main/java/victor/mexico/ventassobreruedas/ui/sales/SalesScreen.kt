@@ -2,13 +2,10 @@ package victor.mexico.ventassobreruedas.ui.sales
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -26,19 +24,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -53,6 +50,7 @@ import victor.mexico.ventassobreruedas.salesRepository
 import victor.mexico.ventassobreruedas.data.repository.Sale
 import victor.mexico.ventassobreruedas.ui.theme.MyApplicationTheme
 import victor.mexico.ventassobreruedas.util.formatCents
+import victor.mexico.ventassobreruedas.util.parsePriceToCents
 import victor.mexico.ventassobreruedas.ui.components.localizedLongDate
 import java.time.Instant
 import java.time.LocalDate
@@ -78,7 +76,7 @@ fun SalesRoute(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SalesScreen(
     form: SaleForm,
@@ -94,12 +92,28 @@ fun SalesScreen(
     // Tras registrar una venta, el cursor vuelve a "Producto" para capturar la siguiente.
     val productFocus = remember { FocusRequester() }
     val submit = { if (onAddSale()) productFocus.requestFocus() }
-    // "Finalizar" se oculta mientras se captura una venta para no presionarlo por accidente.
-    var editingForm by remember { mutableStateOf(false) }
-    // Cerrar el teclado no quita el foco del campo; se quita aquí para que "Finalizar" reaparezca.
-    val focusManager = LocalFocusManager.current
-    val imeVisible = WindowInsets.isImeVisible
-    LaunchedEffect(imeVisible) { if (!imeVisible) focusManager.clearFocus() }
+    // Si al finalizar quedó una venta capturada sin guardar, se pregunta si se registra.
+    var confirmPendingSale by rememberSaveable { mutableStateOf(false) }
+    if (confirmPendingSale) {
+        val price = parsePriceToCents(form.price)?.let { formatCents(it) } ?: form.price.trim()
+        AlertDialog(
+            onDismissRequest = { confirmPendingSale = false },
+            title = { Text(stringResource(R.string.pending_sale_title)) },
+            text = { Text(stringResource(R.string.pending_sale_message, form.productName.trim(), price)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        confirmPendingSale = false
+                        // Si el precio no es válido, no se finaliza: se queda mostrando el error.
+                        if (onAddSale()) onFinishDay()
+                    },
+                ) { Text(stringResource(R.string.register)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmPendingSale = false }) { Text(stringResource(R.string.cancel)) }
+            },
+        )
+    }
     Scaffold(
         modifier = modifier.imePadding(),
         topBar = {
@@ -127,10 +141,16 @@ fun SalesScreen(
             )
         },
         floatingActionButton = {
-            if (!editingForm) {
-                ExtendedFloatingActionButton(onClick = onFinishDay) {
-                    Text(stringResource(R.string.finish_day))
-                }
+            ExtendedFloatingActionButton(
+                onClick = {
+                    if (form.productName.isNotBlank() && form.price.isNotBlank()) {
+                        confirmPendingSale = true
+                    } else {
+                        onFinishDay()
+                    }
+                },
+            ) {
+                Text(stringResource(R.string.finish_day))
             }
         },
     ) { innerPadding ->
@@ -147,7 +167,6 @@ fun SalesScreen(
                         onPriceChange = onPriceChange,
                         onAddSale = submit,
                         productFocus = productFocus,
-                        onEditingChange = { editingForm = it },
                     )
                 }
                 item {
@@ -200,11 +219,7 @@ private fun SaleFormCard(
     onPriceChange: (String) -> Unit,
     onAddSale: () -> Unit,
     productFocus: FocusRequester,
-    onEditingChange: (Boolean) -> Unit,
 ) {
-    var productFocused by remember { mutableStateOf(false) }
-    var priceFocused by remember { mutableStateOf(false) }
-    LaunchedEffect(productFocused, priceFocused) { onEditingChange(productFocused || priceFocused) }
     Column(
         modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -224,8 +239,7 @@ private fun SaleFormCard(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .focusRequester(productFocus)
-                .onFocusChanged { productFocused = it.isFocused },
+                .focusRequester(productFocus),
         )
         OutlinedTextField(
             value = form.price,
@@ -241,9 +255,7 @@ private fun SaleFormCard(
                 imeAction = ImeAction.Done,
             ),
             keyboardActions = KeyboardActions(onDone = { onAddSale() }),
-            modifier = Modifier
-                .fillMaxWidth()
-                .onFocusChanged { priceFocused = it.isFocused },
+            modifier = Modifier.fillMaxWidth(),
         )
         Button(onClick = onAddSale, modifier = Modifier.fillMaxWidth()) {
             Text(stringResource(R.string.add_sale))

@@ -5,6 +5,9 @@
     <string name="price">Price</string>
     <string name="add_sale">Add sale</string>
     <string name="finish_day">Finish</string>
+    <string name="pending_sale_title">Record the sale?</string>
+    <string name="pending_sale_message">\"%1$s\" for %2$s hasn\'t been saved yet. Do you want to record it before finishing?</string>
+    <string name="register">Record</string>
     <string name="error_product">Enter the product name</string>
     <string name="error_price">Enter a valid price (e.g. 12.50)</string>
     <string name="no_sales_yet">No sales recorded today yet.</string>

@@ -5,6 +5,9 @@
     <string name="price">Цена</string>
     <string name="add_sale">Добавить продажу</string>
     <string name="finish_day">Завершить</string>
+    <string name="pending_sale_title">Записать продажу?</string>
+    <string name="pending_sale_message">Продажа «%1$s» за %2$s ещё не сохранена. Записать её перед завершением?</string>
+    <string name="register">Записать</string>
     <string name="error_product">Введите название товара</string>
     <string name="error_price">Введите корректную цену (напр. 12.50)</string>
     <string name="no_sales_yet">Сегодня продаж пока нет.</string>
